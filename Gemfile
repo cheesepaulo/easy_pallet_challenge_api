@@ -18,7 +18,7 @@ gem 'rack-attack'
 # Serializer json
 gem 'active_model_serializers'
 
-group :test do
+group :test, :ci do
   # Strategies for cleaning databases in Ruby.
   gem 'database_cleaner-active_record'
 end
