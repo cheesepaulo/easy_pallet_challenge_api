@@ -13,6 +13,8 @@ gem 'puma', '~> 4.1'
 gem 'bootsnap', '>= 1.4.2', require: false
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible
 gem 'rack-cors'
+# Rack middleware for blocking & throttling abusive requests
+gem 'rack-attack'
 
 group :test do
   # Strategies for cleaning databases in Ruby.
