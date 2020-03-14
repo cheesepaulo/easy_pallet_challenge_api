@@ -23,7 +23,7 @@ group :test do
   gem 'database_cleaner-active_record'
 end
 
-group :development, :test do
+group :development, :test, :ci do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
   # Adds step-by-step debugging and stack navigation capabilities to pry using byebug.
