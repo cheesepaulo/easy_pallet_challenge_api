@@ -13,9 +13,10 @@ jobs:
     # Similar to docker-compose.yml but not the same, 🤷‍♂️
     services:
       postgres:
-        image: postgres:11.6-alpine
+        image: postgres:9.6.17
         env:
-          POSTGRES_PASSWORD: password
+          POSTGRES_HOST: postgres
+          POSTGRES_USER: postgres
         ports:
           - 5432:5432
         # needed because the postgres container does not provide a healthcheck
@@ -43,4 +44,4 @@ jobs:
           RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
         run: |
           bundle exec rails db:setup
-          bundle exec rails test
+          bundle exec rspec
