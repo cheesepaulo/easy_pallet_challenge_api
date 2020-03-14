@@ -15,6 +15,8 @@ gem 'bootsnap', '>= 1.4.2', require: false
 gem 'rack-cors'
 # Rack middleware for blocking & throttling abusive requests
 gem 'rack-attack'
+# Serializer json
+gem 'active_model_serializers'
 
 group :test do
   # Strategies for cleaning databases in Ruby.
