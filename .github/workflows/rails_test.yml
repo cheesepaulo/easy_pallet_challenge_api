@@ -30,7 +30,7 @@ jobs:
       env:
         PGHOST: localhost
         PGUSER: postgres
-        RAILS_ENV: test
+        RAILS_ENV: ci
       run: |
         gem install bundler
         bundle install --jobs 4 --retry 3
