@@ -1,6 +1,6 @@
 name: Rails Tests
 
-# Controls when the action will run. Triggers the workflow on push or pull request 
+# Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the master branch
 on:
   push:
@@ -16,6 +16,7 @@ jobs:
       postgres:
         image: postgres:11
         env:
+          POSTGRES_HOST: localhost
           POSTGRES_USER: myapp
           POSTGRES_DB: myapp_test
           POSTGRES_PASSWORD: ""
