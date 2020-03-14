@@ -32,6 +32,10 @@ group :development, :test do
   gem 'pry-byebug'
   # Testing framework
   gem 'rspec-rails', '~> 4.0.0.rc1'
+  # Fabricate model data
+  gem 'factory_bot_rails'
+  # Generate faker data
+  gem 'ffaker'
 end
 
 group :development do
