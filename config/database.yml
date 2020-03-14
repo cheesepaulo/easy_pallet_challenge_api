@@ -13,6 +13,14 @@ test:
   <<: *default
   database: easy_pallet_challenge_api_test
 
+ci:
+  adapter: postgresql
+  encoding: unicode
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  host: localhost
+  user: postgres
+  database: easy_pallet_challenge_api_test
+
 production:
   <<: *default
   database: easy_pallet_challenge_api_production

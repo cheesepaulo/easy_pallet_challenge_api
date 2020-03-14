@@ -14,9 +14,6 @@ jobs:
     services:
       postgres:
         image: postgres:11.6-alpine
-        env:
-          PGHOST: localhost
-          PGUSER: postgres
         ports:
           - 5432:5432
         # needed because the postgres container does not provide a healthcheck
@@ -41,9 +38,8 @@ jobs:
           bundle install --jobs 4 --retry 3
       - name: Rails test
         env: # Or as an environment variable
-          PGHOST: localhost
-          PGUSER: postgres
           RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
+          ENV: "ci"
         run: |
           bundle exec rails db:setup
           bundle exec rspec
