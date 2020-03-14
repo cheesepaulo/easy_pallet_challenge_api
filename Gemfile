@@ -30,6 +30,8 @@ group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
   # Adds step-by-step debugging and stack navigation capabilities to pry using byebug.
   gem 'pry-byebug'
+  # Testing framework
+  gem 'rspec-rails', '~> 4.0.0.rc1'
 end
 
 group :development do
