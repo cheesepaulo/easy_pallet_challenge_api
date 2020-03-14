@@ -36,10 +36,10 @@ jobs:
         run: |
           bundle config path vendor/bundle
           bundle install --jobs 4 --retry 3
-      - name: Rails test
-        env: # Or as an environment variable
-          RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
-          ENV: "ci"
-        run: |
-          bundle exec rails db:setup
-          bundle exec rspec
+      - name: Run Tests
+      env:
+        PGHOST: localhost
+        PGUSER: postgres
+        RAILS_ENV: ci
+      run: |
+        bundle exec rspec
