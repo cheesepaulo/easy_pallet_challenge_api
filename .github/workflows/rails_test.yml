@@ -13,7 +13,7 @@ jobs:
     # Similar to docker-compose.yml but not the same, 🤷‍♂️
     services:
       postgres:
-        image: postgres:9.6.17
+        image: postgres:9.6.17-alpine
         env:
           POSTGRES_HOST: postgres
           POSTGRES_USER: postgres
