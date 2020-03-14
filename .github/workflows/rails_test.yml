@@ -31,6 +31,7 @@ jobs:
         PGHOST: localhost
         PGUSER: postgres
         RAILS_ENV: ci
+        RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
       run: |
         gem install bundler
         bundle install --jobs 4 --retry 3
@@ -41,5 +42,6 @@ jobs:
         PGHOST: localhost
         PGUSER: postgres
         RAILS_ENV: ci
+        RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
       run: |
         bundle exec rspec
