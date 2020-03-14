@@ -16,7 +16,7 @@ jobs:
       postgres:
         image: postgres:11
         env:
-          POSTGRES_HOST: localhost
+          POSTGRES_HOST: postgres
           POSTGRES_USER: myapp
           POSTGRES_DB: myapp_test
           POSTGRES_PASSWORD: ""
@@ -42,7 +42,7 @@ jobs:
       - name: Setup test database
         env:
           RAILS_ENV: test
-          PGHOST: localhost
+          PGHOST: postgres
           PGUSER: myapp
         run: |
           bin/rails db:setup
