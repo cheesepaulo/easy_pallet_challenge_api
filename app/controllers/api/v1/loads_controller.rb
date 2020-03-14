@@ -7,7 +7,7 @@ class Api::V1::LoadsController < Api::V1::BaseController
   end
 
   def show
-    render json: @load
+    render json: @load, serializer: Api::V1::LoadDetailSerializer 
   end
 
   private
