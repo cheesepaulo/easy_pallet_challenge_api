@@ -29,14 +29,16 @@ RSpec.describe "Api::V1::OrganizeOrderService" do
       it 'first layers are full' do
         Order.find(order.id).ordenated_order_products.each do |op|
           break if op.layer >= @full_layers_count
-          expect(OrdenatedOrderProduct.find(op.id).quantity).to eq(op.product.ballast)
+          expect(OrdenatedOrderProduct.find(op.id).quantity).to eq(
+            OrdenatedOrderProduct.find(op.id).product.ballast)
         end
       end
 
       it 'last layers are picking' do
         Order.find(order.id).ordenated_order_products.reverse.each do |op|
           break if op.layer <= @full_layers_count
-          expect(OrdenatedOrderProduct.find(op.id).quantity).not_to be == (op.product.ballast)
+          expect(OrdenatedOrderProduct.find(op.id).quantity).not_to be == (
+            OrdenatedOrderProduct.find(op.id).product.ballast)
         end
       end
     end
