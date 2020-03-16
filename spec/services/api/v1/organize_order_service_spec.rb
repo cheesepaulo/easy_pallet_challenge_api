@@ -7,7 +7,7 @@ RSpec.describe "Api::V1::OrganizeOrderService" do
       let(:order) { create(:order) }
 
       before do
-        create_list(:order_product, 3, order: order)
+        create_list(:order_product, rand(2..5), order: order)
 
         @status = Api::V1::OrganizeOrderService.new(order).call()
         @full_layers_count = 0
