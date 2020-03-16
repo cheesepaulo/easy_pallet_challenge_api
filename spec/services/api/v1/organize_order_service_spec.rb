@@ -1,49 +1,44 @@
 require 'rails_helper'
 
 RSpec.describe "Api::V1::OrganizeOrderService" do
-  context "with valid data" do
+  (1..5).each do |attemp|
+    context "with valid data attemp #{attemp}" do
 
-    let(:order) { create(:order) }
+      let(:order) { create(:order) }
 
-    before do
-      create_list(:order_product, 3, order: order)
-      @status = Api::V1::OrganizeOrderService.new(order).call()
+      before do
+        create_list(:order_product, 3, order: order)
 
-      @full_layers_count = 0
-      # @pickings = []
-      # @pickings_layers_count = 0
-      # @layer = 0
-      # count = 0
+        @status = Api::V1::OrganizeOrderService.new(order).call()
+        @full_layers_count = 0
 
-      order.order_products.each do |op|
-        division_result = op.quantity.divmod(op.product.ballast)
-        @full_layers_count += division_result[0]
-        # @pickings.push(division_result)
-        # @pickings.last.push(op.product_id)
-        # count=1; while count <= division_result[0]
-        #   @layer += 1; count +=1;
-        # end
+        order.order_products.each do |op|
+          division_result = op.quantity.divmod(op.product.ballast)
+          @full_layers_count += division_result[0]
+        end
       end
-    end
 
-    it 'return true' do
-      expect(@status).to eq(true)
-    end
-
-    it 'create a list of ordenated_order_products' do
-      expect(order.ordenated_order_products.present?).to eq(true)
-    end
-
-    it 'first layers are full' do
-      order.ordenated_order_products.each do |op|
-        expect(op.quantity).to eq(op.product.ballast)
-        break if op.layer >= @full_layers_count
+      it 'return true' do
+        expect(@status).to eq(true)
       end
-    end
 
-    it 'last layer are picking' do
-      expect(order.ordenated_order_products.last.quantity)
-        .not_to be == (order.ordenated_order_products.last.product.ballast)
+      it 'create a list of ordenated_order_products' do
+        expect(Order.find(order.id).ordenated_order_products.present?).to eq(true)
+      end
+
+      it 'first layers are full' do
+        Order.find(order.id).ordenated_order_products.each do |op|
+          break if op.layer >= @full_layers_count
+          expect(OrdenatedOrderProduct.find(op.id).quantity).to eq(op.product.ballast)
+        end
+      end
+
+      it 'last layers are picking' do
+        Order.find(order.id).ordenated_order_products.reverse.each do |op|
+          break if op.layer <= @full_layers_count
+          expect(OrdenatedOrderProduct.find(op.id).quantity).not_to be == (op.product.ballast)
+        end
+      end
     end
   end
 end
