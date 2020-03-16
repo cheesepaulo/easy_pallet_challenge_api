@@ -45,6 +45,10 @@ RSpec.describe "Api::V1::Orders", type: :request do
       end
 
       it { expect(response).to have_http_status(:created) }
+
+      it 'respond with a success message' do
+        expect(response.body).to eq("Order organized successful.")
+      end
     end
 
     context 'when order are empty' do
@@ -53,10 +57,34 @@ RSpec.describe "Api::V1::Orders", type: :request do
         post "/api/v1/order/#{order.id}/organize"
       end
 
-      it { expect(response).to have_http_status(:no_content) }
+      it { expect(response).to have_http_status(:bad_request) }
+
+      it 'respond with an error message' do
+        expect(response.body).to eq("It is not possible to organize an empty order.")
+      end
 
       it 'not create a list of ordenated_order_products' do
         expect(Order.find(order.id).ordenated_order_products.present?).to be false
+      end
+    end
+
+    context 'when the order has already been organized' do
+      before do
+        create_list(:order_product, 5, order: order)
+        2.times { post "/api/v1/order/#{order.id}/organize" }
+      end
+
+      it "respond with status code bad_request" do
+        expect(response).to have_http_status(:bad_request)
+      end
+
+      it 'responde with an error message' do
+        expect(response.body).to eq("It is not possible to organize an order already organized.")
+      end
+
+      it 'not update the ordenated_order_products' do
+        expect(Order.find(order.id).ordenated_order_products.last.updated_at).to eql(
+          order.ordenated_order_products.last.updated_at)
       end
     end
   end
