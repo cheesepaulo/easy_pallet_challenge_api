@@ -5,6 +5,10 @@ class Api::V1::OrdersController < Api::V1::BaseController
     render json: @order
   end
 
+  def show_ordenated
+    render json: @order.ordenated_order_products
+  end
+
   def organize
     if order_can_be_organized?
       if Api::V1::OrganizeOrderService.new(@order).call == true

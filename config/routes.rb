@@ -4,6 +4,7 @@ Rails.application.routes.draw do
       resources :loads, only: [:index, :show]
       resources :orders, only: [:show]
       post '/order/:id/organize', to: 'orders#organize'
+      get '/orders/:id/ordenated', to: 'orders#show_ordenated'
     end
   end
 end
