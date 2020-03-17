@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe "Api::V1::OrganizeOrderService" do
   (1..10).each do |attemp|
-    context "with valid data attemp" do
+    context "with valid data attemp #{attemp}" do
 
       let(:order) { create(:order) }
 
