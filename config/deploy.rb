@@ -33,7 +33,7 @@ set :conditionally_migrate, true
 set :migration_role, :app
 
 ## Linked Files & Directories (Default None):
-set :linked_files, fetch(:linked_files, []).push('config/database.yml', 'config/master.key', 'config/nginx.conf') #copie estes arquivos para a pasta /shared/config e adicione no .gitignore
+set :linked_files, fetch(:linked_files, []).push('config/database.yml', 'config/master.key') #copie estes arquivos para a pasta /shared/config e adicione no .gitignore
 set :linked_dirs, fetch(:linked_dirs, []).push('log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'vendor/bundle', 'public/system', 'storage')
 
 namespace :puma do
