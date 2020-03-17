@@ -88,4 +88,25 @@ RSpec.describe "Api::V1::Orders", type: :request do
       end
     end
   end
+
+  describe 'GET /api/v1/orders/:id/ordenated' do
+    let(:order) { create(:order) }
+
+    context 'with valid data' do
+      before do
+        create_list(:order_product, 5, order: order)
+        Api::V1::OrganizeOrderService.new(order).call()
+        get "/api/v1/orders/#{order.id}/ordenated"
+      end
+
+      it "returns a status code ok" do
+        expect(response).to have_http_status(:ok)
+      end
+
+      it 'returns a serialized list of ordenated_order_products' do
+        expect(json).to eql(each_serialized(Api::V1::OrdenatedOrderProductSerializer,
+          order.ordenated_order_products))
+      end
+    end
+  end
 end
