@@ -1,7 +1,7 @@
 class Api::V1::OrdenatedOrderProductSerializer < ActiveModel::Serializer
-  attributes :id, :order_id, :product, :layer, :quantity, :ballast
+  attributes :id, :order_id, :product_label, :layer, :quantity, :ballast
 
-  def product
+  def product_label
     object.product.label
   end
 
