@@ -1,5 +1,5 @@
 class Api::V1::LoadsController < Api::V1::BaseController
-  before_action :set_load, only: [:show]
+  before_action :set_load, except: [:index, :create]
 
   def index
     loads = Load.all
@@ -18,6 +18,19 @@ class Api::V1::LoadsController < Api::V1::BaseController
 
   def show
     render json: @load, serializer: Api::V1::LoadDetailSerializer 
+  end
+
+  def destroy
+    @load.destroy
+    render status: :ok
+  end
+
+  def update
+    if @load.update(load_params)
+      render json: @load, status: :ok
+    else
+      render json: { errors: @load.errors.full_messages }, status: :unprocessable_entity
+    end
   end
 
   private
