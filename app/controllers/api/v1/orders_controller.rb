@@ -28,6 +28,15 @@ class Api::V1::OrdersController < Api::V1::BaseController
     end
   end
 
+  def destroy
+    unless @order.order_products.present? || @order.ordenated_order_products.present?
+      @order.destroy
+      render status: :ok
+    else
+      render json: "Não é possivel excluir uma gravata com items associados.", status: :unprocessable_entity
+    end  
+  end
+
   def organize
     if order_can_be_organized?
       if Api::V1::OrganizeOrderService.new(@order).call == true

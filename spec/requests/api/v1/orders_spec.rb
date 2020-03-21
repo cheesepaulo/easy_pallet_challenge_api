@@ -110,6 +110,48 @@ RSpec.describe "Api::V1::Orders", type: :request do
     end
   end
 
+  describe "DELETE /api/v1/orders/:id" do
+    let(:order) { create(:order) }
+
+    context "when order has no record associated" do
+      before do
+        create_list(:order, 2)
+        delete "/api/v1/orders/#{order.id}"
+      end
+  
+      it { expect(response).to have_http_status(:ok) }
+  
+      it 'removes the resource' do
+        expect(Order.count).to eq(2)
+      end
+  
+      it 'removes the right resource' do
+        expect(Order.find_by(id: order.id)).to be(nil)
+      end
+    end 
+    
+    context "when product has records associated" do
+      let(:order) { create(:order) }
+      
+      before do
+        create(:order_product, order: order)
+        create(:ordenated_order_product, order: order)
+
+        delete "/api/v1/orders/#{order.id}"
+      end
+
+      it { expect(response).to have_http_status(:unprocessable_entity) }
+
+      it "responds with a error message" do
+        expect(response.body).to eq("Não é possivel excluir uma gravata com items associados.")
+      end
+  
+      it 'not removes the resource' do
+        expect(Order.find_by(id: order.id)).to eq(order)
+      end
+    end
+  end
+
   describe "POST /api/v1/order/:id/organize" do
 
     let(:order) { create(:order) }
