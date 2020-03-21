@@ -57,19 +57,43 @@ RSpec.describe "Api::V1::Products", type: :request do
   describe "DELETE /api/v1/products/:id" do
     let(:product) { create(:product) }
 
-    before do
-      create_list(:product, 2)
-      delete "/api/v1/products/#{product.id}"
-    end
+    context "when product has no record associated" do
+      before do
+        create_list(:product, 2)
+        delete "/api/v1/products/#{product.id}"
+      end
+  
+      it { expect(response).to have_http_status(:ok) }
+  
+      it 'removes the resource' do
+        expect(Product.count).to eq(2)
+      end
+  
+      it 'removes the right resource' do
+        expect(Product.find_by(id: product.id)).to be(nil)
+      end
+    end 
+    
+    context "when product has records associated" do
+      
+      let(:product) { create(:product) }
+      
+      before do
+        create(:order_product, product: product)
+        create(:ordenated_order_product, product: product)
 
-    it { expect(response).to have_http_status(:ok) }
+        delete "/api/v1/products/#{product.id}"
+      end
 
-    it 'removes the resource' do
-      expect(Product.count).to eq(2)
-    end
+      it { expect(response).to have_http_status(:unprocessable_entity) }
 
-    it 'removes the right resource' do
-      expect(Product.find_by(id: product.id)).to be(nil)
+      it "responds with a error message" do
+        expect(json).to have_key("errors")
+      end
+  
+      it 'not removes the resource' do
+        expect(Product.find_by(id: product.id)).to eq(product)
+      end
     end
   end
 

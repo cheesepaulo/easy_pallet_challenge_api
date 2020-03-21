@@ -21,8 +21,12 @@ class Api::V1::ProductsController < Api::V1::BaseController
   end
 
   def destroy
-    @product.destroy
-    render status: :ok
+    unless @product.order_products.present? || @product.ordenated_order_products.present?
+      @product.destroy
+      render status: :ok
+    else
+      render json: { errors: "Não é possivel excluir um produto com ordens associadas." }, status: :unprocessable_entity
+    end  
   end
 
   def update
