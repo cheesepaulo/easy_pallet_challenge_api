@@ -34,6 +34,51 @@ RSpec.describe "Api::V1::Orders", type: :request do
     end
   end
 
+  describe "POST /api/v1/loads/:order_id/orders" do
+    context "with valid params" do
+      let(:order_params) { attributes_for(:order) }
+      let(:load) { create(:load) }
+
+      before do 
+        post "/api/v1/loads/#{load.id}/orders", params: { order: order_params }
+      end
+
+      it { expect(response).to have_http_status(:created) }
+
+      it 'the record has association with load' do
+        expect(Load.find(load.id).orders.count).to eq(1)
+      end
+
+      it 'creates the record in database' do
+        expect(Order.count).to eq(1)
+      end
+
+      it 'creates the right record' do
+        expect(Order.last.code).to eq(order_params[:code])
+        expect(Order.last.bay).to eq(order_params[:bay])
+      end
+    end
+
+    context "with invalid params" do
+      let(:order_params) { {foo: :bar} }
+      let(:load) { create(:load) }
+
+      before do 
+        post "/api/v1/loads/#{load.id}/orders", params: { order: order_params }
+      end
+
+      it { expect(response).to have_http_status(:unprocessable_entity) }
+
+      it "responds with a error message" do
+        expect(json).to have_key("errors")
+      end
+
+      it 'not creates the record in database' do
+        expect(Order.count).to eq(0)
+      end
+    end
+  end
+
   describe "POST /api/v1/order/:id/organize" do
 
     let(:order) { create(:order) }
