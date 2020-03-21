@@ -21,8 +21,12 @@ class Api::V1::LoadsController < Api::V1::BaseController
   end
 
   def destroy
-    @load.destroy
-    render status: :ok
+    unless @load.orders.present?
+      @order.destroy
+      render status: :ok
+    else
+      render json: "Não é possivel excluir uma carga com items associados.", status: :unprocessable_entity
+    end  
   end
 
   def update
