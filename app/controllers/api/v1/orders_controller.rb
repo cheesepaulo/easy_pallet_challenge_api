@@ -20,6 +20,14 @@ class Api::V1::OrdersController < Api::V1::BaseController
     end
   end
 
+  def update
+    if @order.update(order_params)
+      render json: @order, status: :ok
+    else
+      render json: { errors: @order.errors.full_messages }, status: :unprocessable_entity
+    end
+  end
+
   def organize
     if order_can_be_organized?
       if Api::V1::OrganizeOrderService.new(@order).call == true
