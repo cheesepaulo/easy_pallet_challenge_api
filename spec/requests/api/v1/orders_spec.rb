@@ -165,7 +165,7 @@ RSpec.describe "Api::V1::Orders", type: :request do
       it { expect(response).to have_http_status(:created) }
 
       it 'respond with a success message' do
-        expect(response.body).to eq("Order organized successful.")
+        expect(response.body).to eq("Gravata organizada com sucesso")
       end
     end
 
@@ -178,7 +178,7 @@ RSpec.describe "Api::V1::Orders", type: :request do
       it { expect(response).to have_http_status(:bad_request) }
 
       it 'respond with an error message' do
-        expect(response.body).to eq("It is not possible to organize an empty order.")
+        expect(response.body).to eq("Não é possível organizar uma gravata vazia")
       end
 
       it 'not create a list of ordenated_order_products' do
@@ -197,7 +197,7 @@ RSpec.describe "Api::V1::Orders", type: :request do
       end
 
       it 'responde with an error message' do
-        expect(response.body).to eq("It is not possible to organize an order already organized.")
+        expect(response.body).to eq("Não é possivel organizar uma gravata já organizada")
       end
 
       it 'not update the ordenated_order_products' do

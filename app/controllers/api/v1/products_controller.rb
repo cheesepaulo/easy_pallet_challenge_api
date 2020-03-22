@@ -25,7 +25,7 @@ class Api::V1::ProductsController < Api::V1::BaseController
       @product.destroy
       render status: :ok
     else
-      render json: { errors: "Não é possivel excluir um produto com ordens associadas." }, status: :unprocessable_entity
+      render json: "Não é possivel excluir um produto com items associados.", status: :unprocessable_entity
     end  
   end
 

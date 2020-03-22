@@ -40,9 +40,9 @@ class Api::V1::OrdersController < Api::V1::BaseController
   def organize
     if order_can_be_organized?
       if Api::V1::OrganizeOrderService.new(@order).call == true
-        render json: "Order organized successful.", status: :created
+        render json: "Gravata organizada com sucesso", status: :created
       else
-        render json: "This request could not be organized.", status: :bad_request
+        render json: "Esta gravata não pode ser organizada", status: :bad_request
       end
     end
   end
@@ -63,12 +63,12 @@ class Api::V1::OrdersController < Api::V1::BaseController
 
   def order_can_be_organized?
     if @order.ordenated_order_products.present?
-      render json: "It is not possible to organize an order already organized.", status: :bad_request
+      render json: "Não é possivel organizar uma gravata já organizada", status: :bad_request
       return false
     elsif @order.order_products.present?
       return true
     else
-      render json: "It is not possible to organize an empty order.", status: :bad_request
+      render json: "Não é possível organizar uma gravata vazia", status: :bad_request
       return false
     end
   end

@@ -88,7 +88,7 @@ RSpec.describe "Api::V1::Products", type: :request do
       it { expect(response).to have_http_status(:unprocessable_entity) }
 
       it "responds with a error message" do
-        expect(json).to have_key("errors")
+        expect(response.body).to eq("Não é possivel excluir um produto com items associados.")
       end
   
       it 'not removes the resource' do
