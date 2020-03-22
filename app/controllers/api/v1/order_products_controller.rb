@@ -19,7 +19,7 @@ class Api::V1::OrderProductsController < Api::V1::BaseController
   private
 
   def set_order
-    @order = Order.find(params[:order_id])
+    @order = Order.find_by!(id: params[:order_id])
   end
 
   def order_product_params
