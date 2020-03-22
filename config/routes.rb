@@ -15,6 +15,8 @@ Rails.application.routes.draw do
       get '/orders/:id/ordenated', to: 'orders#show_ordenated'
       
       resources :products
+
+      post '/import', to: 'import_records#import'
     end
   end
 end
