@@ -3,11 +3,11 @@ Rails.application.routes.draw do
     namespace :v1 do
       
       resources :loads do
-        resources :orders, only: [:create]
+        resources :orders, only: [:create, :index]
       end
 
       resources :orders, only: [:show, :update, :destroy] do
-        resources :order_products, only: [:create, :index, :update, :destroy]
+        resources :order_products, except: [:show]
         resources :ordenated_order_products, only: [:index]
       end
       

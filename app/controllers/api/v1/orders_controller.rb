@@ -1,6 +1,11 @@
 class Api::V1::OrdersController < Api::V1::BaseController
-  before_action :set_order, except: [:create]
-  before_action :set_load, only: [:create]
+  before_action :set_load, only: [:create, :index]
+  before_action :set_order, except: [:create, :index]
+
+  def index
+    @orders = @load.orders
+    render json: @orders
+  end
 
   def show
     render json: @order
@@ -58,7 +63,7 @@ class Api::V1::OrdersController < Api::V1::BaseController
   end
 
   def set_load
-    @load = Load.find(params[:load_id])
+    @load = Load.find_by(id: params[:load_id])
   end
 
   def order_can_be_organized?
