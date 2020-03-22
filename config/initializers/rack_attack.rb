@@ -7,7 +7,7 @@ module Rack
       req.ip == '127.0.0.1' || req.ip == '::1'
     end
 
-    # Allow an IP address to make 5 requests every 5 seconds
-    throttle('req/ip', limit: 5, period: 5, &:ip)
+    # Allow an IP address to make 15 requests every 5 seconds
+    throttle('req/ip', limit: 15, period: 5, &:ip)
   end
 end
