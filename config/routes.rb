@@ -8,6 +8,7 @@ Rails.application.routes.draw do
 
       resources :orders, only: [:show, :update, :destroy] do
         resources :order_products, only: [:create, :index]
+        resources :ordenated_order_products, only: [:index]
       end
       
       post '/order/:id/organize', to: 'orders#organize'
