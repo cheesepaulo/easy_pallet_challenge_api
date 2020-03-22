@@ -34,6 +34,124 @@ RSpec.describe "Api::V1::Orders", type: :request do
     end
   end
 
+  describe "POST /api/v1/loads/:load_id/orders" do
+    context "with valid params" do
+      let(:order_params) { attributes_for(:order) }
+      let(:load) { create(:load) }
+
+      before do 
+        post "/api/v1/loads/#{load.id}/orders", params: { order: order_params }
+      end
+
+      it { expect(response).to have_http_status(:created) }
+
+      it 'the record has association with load' do
+        expect(Load.find(load.id).orders.count).to eq(1)
+      end
+
+      it 'creates the record in database' do
+        expect(Order.count).to eq(1)
+      end
+
+      it 'creates the right record' do
+        expect(Order.last.code).to eq(order_params[:code])
+        expect(Order.last.bay).to eq(order_params[:bay])
+      end
+    end
+
+    context "with invalid params" do
+      let(:order_params) { {foo: :bar} }
+      let(:load) { create(:load) }
+
+      before do 
+        post "/api/v1/loads/#{load.id}/orders", params: { order: order_params }
+      end
+
+      it { expect(response).to have_http_status(:unprocessable_entity) }
+
+      it "responds with a error message" do
+        expect(json).to have_key("errors")
+      end
+
+      it 'not creates the record in database' do
+        expect(Order.count).to eq(0)
+      end
+    end
+  end
+
+  describe "PUT /api/v1/loads/:load_id/orders/:id" do
+    context "with valid params" do
+      let(:order){ create(:order)}
+      let(:order_params) { attributes_for(:order) }
+  
+      before do
+        put "/api/v1/orders/#{order.id}", params: { order: order_params }
+      end
+  
+      it "updates the right record" do
+        expect(Order.find(order.id).code).to eq(order_params[:code])
+        expect(Order.find(order.id).bay).to eq(order_params[:bay])
+      end
+    end
+
+    context "with invalid params" do
+      let(:order){ create(:order)}
+      let(:order_params){ attributes_for(:order, code: '', bay: '')}
+  
+      before do
+        put "/api/v1/orders/#{order.id}", params: { order: order_params }
+      end
+  
+      it { expect(response).to have_http_status(:unprocessable_entity) }
+
+      it "responds with a error message" do
+        expect(json).to have_key("errors")
+      end
+    end
+  end
+
+  describe "DELETE /api/v1/orders/:id" do
+    let(:order) { create(:order) }
+
+    context "when order has no record associated" do
+      before do
+        create_list(:order, 2)
+        delete "/api/v1/orders/#{order.id}"
+      end
+  
+      it { expect(response).to have_http_status(:ok) }
+  
+      it 'removes the resource' do
+        expect(Order.count).to eq(2)
+      end
+  
+      it 'removes the right resource' do
+        expect(Order.find_by(id: order.id)).to be(nil)
+      end
+    end 
+    
+    context "when product has records associated" do
+      let(:order) { create(:order) }
+      
+      before do
+        create(:order_product, order: order)
+        create(:ordenated_order_product, order: order)
+
+        delete "/api/v1/orders/#{order.id}"
+      end
+
+      it { expect(response).to have_http_status(:unprocessable_entity) }
+
+      it "responds with a error message" do
+        expect(response.body).to eq("Não é possivel excluir uma gravata com items associados.")
+      end
+  
+      it 'not removes the resource' do
+        expect(Order.find_by(id: order.id)).to eq(order)
+      end
+    end
+  end
+
   describe "POST /api/v1/order/:id/organize" do
 
     let(:order) { create(:order) }
@@ -47,7 +165,7 @@ RSpec.describe "Api::V1::Orders", type: :request do
       it { expect(response).to have_http_status(:created) }
 
       it 'respond with a success message' do
-        expect(response.body).to eq("Order organized successful.")
+        expect(response.body).to eq("Gravata organizada com sucesso")
       end
     end
 
@@ -60,7 +178,7 @@ RSpec.describe "Api::V1::Orders", type: :request do
       it { expect(response).to have_http_status(:bad_request) }
 
       it 'respond with an error message' do
-        expect(response.body).to eq("It is not possible to organize an empty order.")
+        expect(response.body).to eq("Não é possível organizar uma gravata vazia")
       end
 
       it 'not create a list of ordenated_order_products' do
@@ -79,7 +197,7 @@ RSpec.describe "Api::V1::Orders", type: :request do
       end
 
       it 'responde with an error message' do
-        expect(response.body).to eq("It is not possible to organize an order already organized.")
+        expect(response.body).to eq("Não é possivel organizar uma gravata já organizada")
       end
 
       it 'not update the ordenated_order_products' do
