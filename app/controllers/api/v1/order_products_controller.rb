@@ -1,5 +1,10 @@
 class Api::V1::OrderProductsController < Api::V1::BaseController
-  before_action :set_order
+  before_action :set_order, only: [:create, :index]
+
+  def index
+    @order_products = @order.order_products
+    render json: @order_products
+  end
 
   def create
     @order_product = @order.order_products.build(order_product_params)
